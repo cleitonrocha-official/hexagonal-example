@@ -1,0 +1,72 @@
+
+
+### API - GET de SUCESSO obter dados do cep por cep ###
+-  request:
+     method: GET
+     url: /cep/13232211
+    
+
+   response:
+     headers:
+       content-type: "text/plain;charset=utf-8"
+     status: 200
+     body: "13232-211;Rua Salvador Di Gioia; ;Parque Residencial Califórnia;Campo Limpo Paulista;SP"
+
+
+### API - GET de SUCESSO obter dados do cep por cep ###
+-  request:
+     method: GET
+     url: /cep/rua/Rua Salvador Di Gioia/cidade/Campo Limpo Paulista/uf/SP
+    
+
+   response:
+     headers:
+       content-type: "text/plain;charset=utf-8"
+     status: 200
+     body: "13232-211;Rua Salvador Di Gioia; ;Parque Residencial Califórnia;Campo Limpo Paulista;SP"  
+     
+
+### API - GET de SUCESSO obter dados endereco por id CACHE SIMULADO###
+-  request:
+     method: GET
+     url: /address
+    
+
+   response:
+     headers:
+       content-type: "application/json;charset=utf-8"
+     status: 200
+     body: > 
+      [
+        {
+          "id": "60b017294d683e5b36cb7538",
+          "street": "Rua Salvador Di Gioia",
+          "number": 110,
+          "add": "apt 23",
+          "neighborhood": "Parque Residencial Califórnia",
+          "local": "Campo Limpo Paulista",
+          "uf": "SP",
+          "cep": "13232-211"
+        },
+        {
+          "id": "60b05bedbe8e04759732ed32",
+          "street": "Rua Antônio Jeremias",
+          "number": 26,
+          "add": null,
+          "neighborhood": "Conjunto Habitacional São José",
+          "local": "Campo Limpo Paulista",
+          "uf": "SP",
+          "cep": "13232-265"
+        },
+        {
+          "id": "60b05c13be8e04759732ed33",
+          "street": "Avenida Maria Aparecida Pansarim Porcari",
+          "number": 330,
+          "add": "Casa 59",
+          "neighborhood": "Chácara Planalto",
+          "local": "Jundiaí",
+          "uf": "SP",
+          "cep": "13212-265"
+        }
+      ]
+       
