@@ -27,7 +27,7 @@ public class MongoAddressCreateOutboundService implements AddressCreatePortOutbo
 		
 		var savedAddressModel = repository.save(addressModelToSave);
 		
-		log.info("new address saved with sucess");
+		log.info("new address saved with success");
 		
 		return savedAddressModel.getId();
 	}

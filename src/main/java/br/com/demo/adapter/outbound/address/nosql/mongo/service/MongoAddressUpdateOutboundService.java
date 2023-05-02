@@ -27,7 +27,7 @@ public class MongoAddressUpdateOutboundService implements AddressUpdatePortOutbo
 		
 		repository.save(addressModelToSave);
 		
-		log.info("new address updated with sucess");
+		log.info("new address updated with success");
 		
 	}
 

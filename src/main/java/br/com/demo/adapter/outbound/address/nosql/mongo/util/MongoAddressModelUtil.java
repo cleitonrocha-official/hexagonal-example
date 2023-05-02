@@ -1,18 +1,18 @@
-package br.com.demo.adapter.outbound.address.nosql.mongo.bo;
+package br.com.demo.adapter.outbound.address.nosql.mongo.util;
 
 import static java.util.Optional.ofNullable;
 
 import br.com.demo.core.dto.AddressCoreDTO;
 
-public class MongoAddressModelBO {
+public class MongoAddressModelUtil {
 
-	private static final MongoAddressModelBO INSTANCE = new MongoAddressModelBO();
+	private static final MongoAddressModelUtil INSTANCE = new MongoAddressModelUtil();
 	
-	private MongoAddressModelBO() {
+	private MongoAddressModelUtil() {
 		
 	}
 	
-	public static MongoAddressModelBO getInstance() {
+	public static MongoAddressModelUtil getInstance() {
 		return INSTANCE;
 	}
 

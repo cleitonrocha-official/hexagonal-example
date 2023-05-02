@@ -24,7 +24,7 @@ public class ViaCepZipCodeDataByIdOutboundService implements ZipCodeDataByIdPort
 	@Override
 	public Optional<ZipCodeDataCoreDTO> execute(String zipCode) {
 
-		log.info("Tryng proccess find zip code data by ID with VIA-CEP...");
+		log.info("Tryng process find zip code data by ID with VIA-CEP...");
 		try {
 
 		var responseFindGeolocate = client
@@ -33,15 +33,15 @@ public class ViaCepZipCodeDataByIdOutboundService implements ZipCodeDataByIdPort
 		if (responseFindGeolocate.getStatusCode().is2xxSuccessful()) {
 			var bodyReponse = responseFindGeolocate.getBody();
 			
-			log.info("Proccess find zip code data by ID with VIA-CEP successefull");
+			log.info("Process find zip code data by ID with VIA-CEP successefull");
 			return Optional
 					.of(mapper.from(bodyReponse));
 		}
 
-		log.warn("Warning in proccess find zip code data by ID with VIA-CEP , http status is {}", responseFindGeolocate.getStatusCodeValue());
+		log.warn("Warning in process find zip code data by ID with VIA-CEP , http status is {}", responseFindGeolocate.getStatusCodeValue());
 		return Optional.empty();
 		}catch (Exception e) {
-			log.error("Proccess find zip code data by ID with VIA-CEP failed: {}", e.getMessage());
+			log.error("Process find zip code data by ID with VIA-CEP failed: {}", e.getMessage());
 			return Optional.empty();
 		}
 	}

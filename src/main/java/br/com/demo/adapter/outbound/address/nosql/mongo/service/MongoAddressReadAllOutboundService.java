@@ -31,7 +31,7 @@ public class MongoAddressReadAllOutboundService implements AddressReadAllPortOut
 	
 		var mapperedAllAddressFound = allAddressFound.map(mapper::from);
 		
-		log.info("sucess in read address by pageable options");
+		log.info("success in read address by pageable options");
 		
 		return mapperedAllAddressFound;
 	}

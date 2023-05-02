@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import br.com.demo.core.bo.AddressBO;
 import br.com.demo.core.dto.AddressCoreDTO;
 import br.com.demo.core.dto.ZipCodeDataCoreDTO;
-import br.com.demo.core.errors.NotFoundRegisterToChangerValuesException;
+import br.com.demo.core.errors.exceptions.AddressException;
 import br.com.demo.core.port.inbound.AddressCrudDomainPortInbound;
 import br.com.demo.core.port.outbound.AddressCreatePortOutbound;
 import br.com.demo.core.port.outbound.AddressDeletePortOubound;
@@ -84,7 +84,7 @@ public class AddressCrudDomainService implements AddressCrudDomainPortInbound {
 	}
 
 	@Override
-	public void update(AddressCoreDTO addressCoreDTO) throws NotFoundRegisterToChangerValuesException{
+	public void update(AddressCoreDTO addressCoreDTO) throws AddressException{
 
 		log.info("start update process...");
 
@@ -100,16 +100,14 @@ public class AddressCrudDomainService implements AddressCrudDomainPortInbound {
 	}
 
 	@Override
-	public void patch(AddressCoreDTO patchAddressCoreDTO) throws NotFoundRegisterToChangerValuesException {
+	public void patch(AddressCoreDTO patchAddressCoreDTO) throws AddressException {
 
 		log.info("start patch process...");
 
 		var canUpdateThisAddress = read(patchAddressCoreDTO.getId());
 
-		addressBO.canChangeThisAddressValidation(canUpdateThisAddress);
+		var addressFoundToPatch = addressBO.canChangeThisAddressValidation(canUpdateThisAddress);
 		
-		var addressFoundToPatch = canUpdateThisAddress.orElseThrow(NotFoundRegisterToChangerValuesException::new);
-
 		addressPatchPortOubound.execute(addressFoundToPatch, patchAddressCoreDTO);
 
 		log.info("finish patch process");
@@ -117,7 +115,7 @@ public class AddressCrudDomainService implements AddressCrudDomainPortInbound {
 	}
 
 	@Override
-	public void delete(String addressId) throws NotFoundRegisterToChangerValuesException{
+	public void delete(String addressId) throws AddressException{
 
 		log.info("start delete process...");
 		
@@ -135,15 +133,14 @@ public class AddressCrudDomainService implements AddressCrudDomainPortInbound {
 		
 			var addressByZipCodeFound = findAddressByZipCode(addressCoreDTO);
 
-			addressBO.updateAddress(addressCoreDTO, addressByZipCodeFound);
+			addressBO.update(addressCoreDTO, addressByZipCodeFound);
 		
 	}
 
 	private Optional<ZipCodeDataCoreDTO> findAddressByZipCode(AddressCoreDTO addressCoreDTO) {
-		if(addressBO.containZipCodeValid(addressCoreDTO)) {
-			
+		
+		if(addressBO.containZipCodeValid(addressCoreDTO)) 
 			return zipCodeDataByIdPortOubound.execute(addressCoreDTO.getZipcode());
-		}
 		
 		return zipCodeDataByAddressPortOubound.execute(addressCoreDTO);
 		

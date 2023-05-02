@@ -26,9 +26,10 @@ public class MongoAddressReadByIdOutboundService implements AddressReadByIdPortO
 		
 		var optAddressFound = repository.findById(addressId);
 	
+		log.info("result {} ", optAddressFound.isPresent());
 		var mapperedAddressFound = optAddressFound.map(mapper::from);
 		
-		log.info("sucess in read address with id {}", addressId);
+		log.info("success in read address with id {} ", addressId);
 		
 		return mapperedAddressFound;
 	}

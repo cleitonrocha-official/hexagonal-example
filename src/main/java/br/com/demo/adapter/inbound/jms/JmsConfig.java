@@ -1,5 +1,7 @@
 package br.com.demo.adapter.inbound.jms;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 import javax.jms.ConnectionFactory;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -27,8 +29,8 @@ public class JmsConfig {
 
     @Bean
     public ActiveMQConnectionFactory connectionFactory() {
-        if ( "".equals(user) ) {
-            return new ActiveMQConnectionFactory(brokerUrl);
+        if ( EMPTY.equals(user) ) {
+             return new ActiveMQConnectionFactory(brokerUrl);
         }
         return new ActiveMQConnectionFactory(user, password, brokerUrl);
     }
@@ -36,7 +38,7 @@ public class JmsConfig {
     @Bean
     public JmsListenerContainerFactory<?> jmsFactoryTopic(ConnectionFactory connectionFactory,
                                                   DefaultJmsListenerContainerFactoryConfigurer configurer) {
-        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+        var factory = new DefaultJmsListenerContainerFactory();
         configurer.configure(factory, connectionFactory);
         factory.setPubSubDomain(true);
         return factory;

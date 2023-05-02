@@ -1,4 +1,4 @@
-package br.com.demo.adapter.inbound.rest.bo;
+package br.com.demo.adapter.inbound.rest.util;
 
 import java.net.InetAddress;
 import java.net.URI;
@@ -11,20 +11,23 @@ import org.springframework.core.env.Environment;
 
 import lombok.extern.slf4j.Slf4j;
 
+/*
+ * Esse objeto é usado para isolar uma regra tecnica
+ */
 @Slf4j
-public class AddressRestBO {
+public class AddressRestUtil {
 
-	private static final AddressRestBO INSTANCE = new AddressRestBO();
+	private static final AddressRestUtil INSTANCE = new AddressRestUtil();
 	private static final String SEPARADOR_URI = "/";
-	private AddressRestBO() {
+	private AddressRestUtil() {
 		
 	}
 	
-	public static AddressRestBO getInstance() {
+	public static AddressRestUtil getInstance() {
 		return INSTANCE;
 	}
 	
-	public URI getUriCreate(Environment env, String context, HttpServletRequest request, String addressId) {
+	public URI buildApplicationUriAfterCreate(Environment env, String context, HttpServletRequest request, String addressId) {
 		try {
 			var servletPath = request.getServletPath();
 

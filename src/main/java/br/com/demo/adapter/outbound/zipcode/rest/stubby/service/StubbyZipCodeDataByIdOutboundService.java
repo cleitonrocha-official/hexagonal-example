@@ -25,7 +25,7 @@ public class StubbyZipCodeDataByIdOutboundService implements ZipCodeDataByIdPort
 	@Override
 	public Optional<ZipCodeDataCoreDTO> execute(String zipCode) {
 
-		log.info("Tryng proccess find zip code data by ID with STUBBY...");
+		log.info("Tryng process find zip code data by ID with STUBBY...");
 		try {
 
 		var responseFindGeolocate = client
@@ -34,15 +34,15 @@ public class StubbyZipCodeDataByIdOutboundService implements ZipCodeDataByIdPort
 		if (responseFindGeolocate.getStatusCode().is2xxSuccessful()) {
 			var bodyReponse = responseFindGeolocate.getBody();
 			
-			log.info("Proccess find zip code data by ID with STUBBY successefull");
+			log.info("Process find zip code data by ID with STUBBY successefull");
 			return Optional
 					.of(mapper.from(bodyReponse));
 		}
 
-		log.warn("Warning in proccess find zip code data by ID with STUBBY , http status is {}", responseFindGeolocate.getStatusCodeValue());
+		log.warn("Warning in process find zip code data by ID with STUBBY , http status is {}", responseFindGeolocate.getStatusCodeValue());
 		return Optional.empty();
 		}catch (Exception e) {
-			log.error("Proccess find zip code data by ID with STUBBY failed: {}", e.getMessage());
+			log.error("Process find zip code data by ID with STUBBY failed: {}", e.getMessage());
 			return Optional.empty();
 		}
 	}

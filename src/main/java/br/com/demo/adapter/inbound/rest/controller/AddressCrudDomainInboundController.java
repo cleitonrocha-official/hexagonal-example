@@ -21,14 +21,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.demo.adapter.inbound.rest.bo.AddressRestBO;
-import br.com.demo.adapter.inbound.rest.errors.BadRequestNotFoundRegisterToChangeException;
 import br.com.demo.adapter.inbound.rest.mapper.InboundRestMapper;
 import br.com.demo.adapter.inbound.rest.request.json.CreateAddressRequestJson;
 import br.com.demo.adapter.inbound.rest.request.json.PatchAddressRequestJson;
 import br.com.demo.adapter.inbound.rest.request.json.UpdateAddressRequestJson;
 import br.com.demo.adapter.inbound.rest.response.json.GetAddressResponseJson;
-import br.com.demo.core.errors.NotFoundRegisterToChangerValuesException;
+import br.com.demo.adapter.inbound.rest.util.AddressRestUtil;
+import br.com.demo.core.errors.exceptions.AddressException;
 import br.com.demo.core.port.inbound.AddressCrudDomainPortInbound;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
@@ -39,7 +38,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class AddressCrudDomainInboundController {
 
-	private AddressCrudDomainPortInbound addressCrudDomainPortInbound;
+	private AddressCrudDomainPortInbound crudDomainPortInbound;
 
 	private InboundRestMapper mapper;
 
@@ -47,16 +46,16 @@ public class AddressCrudDomainInboundController {
 
 	private ServletContext servletContext;
 
-	private final AddressRestBO addressRestBO = AddressRestBO.getInstance();
+	private final AddressRestUtil util = AddressRestUtil.getInstance();
 
 	@PostMapping
 	public ResponseEntity<URI> create(@Valid @RequestBody CreateAddressRequestJson body, HttpServletRequest request) {
 
 		var coreDTO = mapper.from(body);
 
-		var addressId = addressCrudDomainPortInbound.create(coreDTO);
+		var addressId = crudDomainPortInbound.create(coreDTO);
 
-		var applicationUri = addressRestBO.getUriCreate(env, servletContext.getContextPath(), request, addressId);
+		var applicationUri = util.buildApplicationUriAfterCreate(env, servletContext.getContextPath(), request, addressId);
 
 		return ResponseEntity.created(applicationUri).build();
 
@@ -64,7 +63,7 @@ public class AddressCrudDomainInboundController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<GetAddressResponseJson> read(@Valid @NotNull @PathVariable("id") String addressId) {
-		var optAddress = addressCrudDomainPortInbound.read(addressId);
+		var optAddress = crudDomainPortInbound.read(addressId);
 
 		if (optAddress.isEmpty()) {
 			return ResponseEntity.notFound().build();
@@ -77,11 +76,8 @@ public class AddressCrudDomainInboundController {
 
 	@GetMapping()
 	public ResponseEntity<Page<GetAddressResponseJson>> read(Pageable pageable) {
-		var pageAddress = addressCrudDomainPortInbound.read(pageable);
+		var pageAddress = crudDomainPortInbound.read(pageable);
 
-		if (pageAddress.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
 		var bodyResponse = pageAddress.map(mapper::from);
 
 		return ResponseEntity.ok(bodyResponse);
@@ -90,45 +86,34 @@ public class AddressCrudDomainInboundController {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@Valid @RequestBody UpdateAddressRequestJson body,
-			@Valid @NotNull @PathVariable("id") String addressId) {
+			@Valid @NotNull @PathVariable("id") String addressId) throws AddressException {
 
 		var coreDTO = mapper.from(body);
 
 		coreDTO.setId(addressId);
 
-		try {
-			addressCrudDomainPortInbound.update(coreDTO);
-		} catch (NotFoundRegisterToChangerValuesException e) {
-			throw new BadRequestNotFoundRegisterToChangeException();
-		}
+		crudDomainPortInbound.update(coreDTO);
 
 		return ResponseEntity.noContent().build();
 	}
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<Void> patch(@RequestBody PatchAddressRequestJson body,
-			@Valid @NotNull @PathVariable("id") String addressId) {
+			@Valid @NotNull @PathVariable("id") String addressId) throws AddressException {
 
 		var coreDTO = mapper.from(body);
 
 		coreDTO.setId(addressId);
-		try {
-			addressCrudDomainPortInbound.patch(coreDTO);
-		} catch (NotFoundRegisterToChangerValuesException e) {
-			throw new BadRequestNotFoundRegisterToChangeException();
-		}
+		
+		crudDomainPortInbound.patch(coreDTO);
 
 		return ResponseEntity.noContent().build();
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> delete(@Valid @NotNull @PathVariable("id") String addressId) {
+	public ResponseEntity<Void> delete(@Valid @NotNull @PathVariable("id") String addressId) throws AddressException {
 
-		try {
-			addressCrudDomainPortInbound.delete(addressId);
-		} catch (NotFoundRegisterToChangerValuesException e) {
-			throw new BadRequestNotFoundRegisterToChangeException();
-		}
+		crudDomainPortInbound.delete(addressId);
 
 		return ResponseEntity.noContent().build();
 	}
